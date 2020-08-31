@@ -2,54 +2,55 @@ import * as React from "react";
 import "./styles.css";
 
 export default function App() {
-  const [formValues, setFormValues] = React.useState([
+  const [fieldVal, setFieldVal] = React.useState([
     {
+      id: 0,
       firstName: "",
       lastName: ""
     }
   ]);
-  const [show, setShow] = React.useState(false);
+  const [fn, setFn] = React.useState("");
+  const [ln, setLn] = React.useState("");
 
-  const handleFields = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleField = (event: React.ChangeEvent<HTMLInputElement>): boolean => {
     event.preventDefault();
-    setFormValues([...formValues, { [event.target.name]: event.target.value }]);
+    const { name, value } = event.target;
+    setFieldVal([
+      ...fieldVal,
+      {
+        id: fieldVal.length,
+        firstName: fn,
+        lastName: ln
+      }
+    ]);
+
+    return true;
   };
 
-  const renderList = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event?.preventDefault();
-    if (formValues.length < 1) return false;
-    return formValues.map((item) => (
-      <li>{item.firstName + " " + item.lastName}</li>
-    ));
-  };
-
-  const showList = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    setShow(true);
+  const renderVal = () => {
+    console.log(JSON.stringify(fieldVal));
   };
   return (
     <div className="App">
-      <p>This example will show how to update array objects in React Hooks</p>
-
-      <form>
-        <div>
-          <label> Firstname :</label>{" "}
-          <input
-            type="text"
-            name="firstName"
-            onChange={(e) => handleFields(e)}
-          />
-          <label> Lastname :</label>{" "}
-          <input
-            type="text"
-            name="lastName"
-            onChange={(e) => handleFields(e)}
-          />
-          <button onClick={showList}>Add</button>
-        </div>
-      </form>
-      <p>Full Name</p>
-      <ul>{show ? renderList() : <></>}</ul>
+      FirstName:->{" "}
+      <input
+        type="text"
+        name="firstName"
+        onChange={(e) => setFn(e.target.value)}
+      />
+      LastName:->{" "}
+      <input
+        type="text"
+        name="lastName"
+        onChange={(e) => setLn(e.target.value)}
+      />
+      <button onClick={(e) => handleField(e)}>Submit</button>
+      <p>{JSON.stringify(fieldVal)}</p>
+      <div>
+        {fieldVal.map((item, index) => (
+          <div key={index}>{item.firstName + " " + item.lastName}</div>
+        ))}
+      </div>
     </div>
   );
 }
